@@ -10223,7 +10223,7 @@ function navbarTemplate() {
               </div>
               ${component.subComponents.filter(p => p.expanded !== false).map(p => lit_html_x`
                 <div class='nav-bar-path' data-action='navigate' data-content-id='cmp--${p.id}' id='link-cmp--${p.id}'>
-                  <span> ${p.name} </span>
+                  <span style = 'pointer-events: none;'> ${p.name} </span>
                 </div>`)}` : '')}` : ''}
     </nav>`}
 </nav>
@@ -19483,7 +19483,7 @@ function getType(str) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("373f37ab7534d66db541")
+/******/ 		__webpack_require__.h = () => ("c0258d1e5d0f79145cd7")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
