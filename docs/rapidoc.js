@@ -6466,7 +6466,7 @@ function generateExample(schema, mimeType, examples = '', example = '', includeR
           exampleValue: schema.example,
           exampleFormat: mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('json') && typeof schema.example === 'object' ? 'json' : 'text'
         });
-      } else if (mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('json') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('text') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('*/*') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('xml')) {
+      } else if (mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('json') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('text') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('*/*') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('xml') || mimeType !== null && mimeType !== void 0 && mimeType.toLowerCase().includes('multipart/related')) {
         let xmlRootStart = '';
         let xmlRootEnd = '';
         let exampleFormat = '';
@@ -7933,14 +7933,16 @@ class ApiRequest extends lit_element_s {
     requestBodyTypes.forEach(reqBody => {
       let schemaAsObj;
       let reqBodyExamples = [];
-      if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose')) {
+      if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/')) {
         // Generate Example
         if (reqBody.mimeType === this.selectedRequestBodyType) {
           reqBodyExamples = generateExample(reqBody.schema, reqBody.mimeType, reqBody.examples, reqBody.example, this.callback === 'true' || this.webhook === 'true' ? true : false,
           // eslint-disable-line no-unneeded-ternary
           this.callback === 'true' || this.webhook === 'true' ? false : true,
           // eslint-disable-line no-unneeded-ternary
-          'text', false);
+          'text', reqBody.mimeType === 'multipart/related' ? true : false // eslint-disable-line no-unneeded-ternary,
+          );
+
           if (!this.selectedRequestBodyExample) {
             this.selectedRequestBodyExample = reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleId : '';
           }
@@ -7987,13 +7989,15 @@ class ApiRequest extends lit_element_s {
             </div>
           `;
         }
-      } else if (this.selectedRequestBodyType.includes('form-urlencoded') || this.selectedRequestBodyType.includes('form-data')) {
+      } else if (this.selectedRequestBodyType.includes('form-urlencoded') || this.selectedRequestBodyType.includes('form-data') || this.selectedRequestBodyType.includes('multipart/')) {
         if (reqBody.mimeType === this.selectedRequestBodyType) {
           const ex = generateExample(reqBody.schema, reqBody.mimeType, reqBody.examples, reqBody.example, this.callback === 'true' || this.webhook === 'true' ? true : false,
           // eslint-disable-line no-unneeded-ternary
           this.callback === 'true' || this.webhook === 'true' ? false : true,
           // eslint-disable-line no-unneeded-ternary
-          'text', false);
+          'text', reqBody.mimeType === 'multipart/related' ? true : false // eslint-disable-line no-unneeded-ternary
+          );
+
           if (reqBody.schema) {
             reqBodyFormHtml = this.formDataTemplate(reqBody.schema, reqBody.mimeType, ex[0] ? ex[0].exampleValue : '');
           }
@@ -8009,7 +8013,7 @@ class ApiRequest extends lit_element_s {
       }
 
       // Generate Schema
-      if (reqBody.mimeType.includes('json') || reqBody.mimeType.includes('xml') || reqBody.mimeType.includes('text') || this.selectedRequestBodyType.includes('jose')) {
+      if (reqBody.mimeType.includes('json') || reqBody.mimeType.includes('xml') || reqBody.mimeType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/')) {
         schemaAsObj = schemaInObjectNotation(reqBody.schema, {});
         if (this.schemaStyle === 'table') {
           reqBodySchemaHtml = lit_html_x`
@@ -8054,7 +8058,7 @@ class ApiRequest extends lit_element_s {
         </div>
         ${this.request_body.description ? lit_html_x`<div class="m-markdown" style="margin-bottom:12px">${unsafe_html_o(marked(this.request_body.description))}</div>` : ''}
         
-        ${this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') ? lit_html_x`
+        ${this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/') ? lit_html_x`
             <div class="tab-panel col" style="border-width:0 0 1px 0;">
               <div class="tab-buttons row" @click="${e => {
       if (e.target.tagName.toLowerCase() === 'button') {
@@ -8571,7 +8575,7 @@ class ApiRequest extends lit_element_s {
     if (requestBodyContainerEl) {
       const requestBodyType = requestBodyContainerEl.dataset.selectedRequestBodyType;
       // Common for all request-body
-      if (!requestBodyType.includes('form-data')) {
+      if (!requestBodyType.includes('form-data') && !requestBodyType.includes('multipart/')) {
         // For multipart/form-data dont set the content-type to allow creation of browser generated part boundaries
         reqHeaders.append('Content-Type', requestBodyType);
       }
@@ -19483,7 +19487,7 @@ function getType(str) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("c0258d1e5d0f79145cd7")
+/******/ 		__webpack_require__.h = () => ("fa11e2a8e218278726c0")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
