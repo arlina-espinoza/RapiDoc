@@ -922,7 +922,7 @@ export function generateExample(schema, mimeType, examples = '', example = '', i
           exampleValue: schema.example,
           exampleFormat: ((mimeType?.toLowerCase().includes('json') && typeof schema.example === 'object') ? 'json' : 'text'),
         });
-      } else if (mimeType?.toLowerCase().includes('json') || mimeType?.toLowerCase().includes('text') || mimeType?.toLowerCase().includes('*/*') || mimeType?.toLowerCase().includes('xml')) {
+      } else if (mimeType?.toLowerCase().includes('json') || mimeType?.toLowerCase().includes('text') || mimeType?.toLowerCase().includes('*/*') || mimeType?.toLowerCase().includes('xml') || mimeType?.toLowerCase().includes('multipart/related')) {
         let xmlRootStart = '';
         let xmlRootEnd = '';
         let exampleFormat = '';
