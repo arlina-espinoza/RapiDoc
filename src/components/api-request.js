@@ -635,7 +635,7 @@ export default class ApiRequest extends LitElement {
       let schemaAsObj;
       let reqBodyExamples = [];
 
-      if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose')) {
+      if (this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/')) {
         // Generate Example
         if (reqBody.mimeType === this.selectedRequestBodyType) {
           reqBodyExamples = generateExample(
@@ -646,7 +646,7 @@ export default class ApiRequest extends LitElement {
             this.callback === 'true' || this.webhook === 'true' ? true : false, // eslint-disable-line no-unneeded-ternary
             this.callback === 'true' || this.webhook === 'true' ? false : true, // eslint-disable-line no-unneeded-ternary
             'text',
-            false,
+            reqBody.mimeType === 'multipart/related' ? true : false, // eslint-disable-line no-unneeded-ternary,
           );
           if (!this.selectedRequestBodyExample) {
             this.selectedRequestBodyExample = (reqBodyExamples.length > 0 ? reqBodyExamples[0].exampleId : '');
@@ -699,7 +699,7 @@ export default class ApiRequest extends LitElement {
             </div>
           `;
         }
-      } else if (this.selectedRequestBodyType.includes('form-urlencoded') || this.selectedRequestBodyType.includes('form-data')) {
+      } else if (this.selectedRequestBodyType.includes('form-urlencoded') || this.selectedRequestBodyType.includes('form-data') || this.selectedRequestBodyType.includes('multipart/')) {
         if (reqBody.mimeType === this.selectedRequestBodyType) {
           const ex = generateExample(
             reqBody.schema,
@@ -709,7 +709,7 @@ export default class ApiRequest extends LitElement {
             this.callback === 'true' || this.webhook === 'true' ? true : false, // eslint-disable-line no-unneeded-ternary
             this.callback === 'true' || this.webhook === 'true' ? false : true, // eslint-disable-line no-unneeded-ternary
             'text',
-            false,
+            reqBody.mimeType === 'multipart/related' ? true : false, // eslint-disable-line no-unneeded-ternary
           );
           if (reqBody.schema) {
             reqBodyFormHtml = this.formDataTemplate(reqBody.schema, reqBody.mimeType, (ex[0] ? ex[0].exampleValue : ''));
@@ -726,7 +726,7 @@ export default class ApiRequest extends LitElement {
       }
 
       // Generate Schema
-      if (reqBody.mimeType.includes('json') || reqBody.mimeType.includes('xml') || reqBody.mimeType.includes('text') || this.selectedRequestBodyType.includes('jose')) {
+      if (reqBody.mimeType.includes('json') || reqBody.mimeType.includes('xml') || reqBody.mimeType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/')) {
         schemaAsObj = schemaInObjectNotation(reqBody.schema, {});
         if (this.schemaStyle === 'table') {
           reqBodySchemaHtml = html`
@@ -772,7 +772,7 @@ export default class ApiRequest extends LitElement {
         </div>
         ${this.request_body.description ? html`<div class="m-markdown" style="margin-bottom:12px">${unsafeHTML(marked(this.request_body.description))}</div>` : ''}
         
-        ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose'))
+        ${(this.selectedRequestBodyType.includes('json') || this.selectedRequestBodyType.includes('xml') || this.selectedRequestBodyType.includes('text') || this.selectedRequestBodyType.includes('jose') || this.selectedRequestBodyType.includes('multipart/'))
           ? html`
             <div class="tab-panel col" style="border-width:0 0 1px 0;">
               <div class="tab-buttons row" @click="${(e) => { if (e.target.tagName.toLowerCase() === 'button') { this.activeSchemaTab = e.target.dataset.tab; } }}">
@@ -1319,7 +1319,7 @@ export default class ApiRequest extends LitElement {
     if (requestBodyContainerEl) {
       const requestBodyType = requestBodyContainerEl.dataset.selectedRequestBodyType;
       // Common for all request-body
-      if (!requestBodyType.includes('form-data')) {
+      if (!requestBodyType.includes('form-data') && !requestBodyType.includes('multipart/')) {
         // For multipart/form-data dont set the content-type to allow creation of browser generated part boundaries
         reqHeaders.append('Content-Type', requestBodyType);
       }
