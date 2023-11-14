@@ -4152,7 +4152,10 @@ customize their theme. Simply add your css to this file and yarn build.
 */
 
 /* harmony default export */ const custom_styles = (i`
-
+  .json-tree {
+    max-height: 40em;
+    overflow-y: auto;
+  }
 `);
 ;// CONCATENATED MODULE: ./src/utils/common-utils.js
 /* For Delayed Event Handler Execution */
@@ -19487,7 +19490,7 @@ function getType(str) {
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("fa11e2a8e218278726c0")
+/******/ 		__webpack_require__.h = () => ("53582df8337f7d33961c")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
